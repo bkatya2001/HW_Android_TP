@@ -86,11 +86,22 @@ public class RVFragment extends Fragment {
         }
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder {
         public final TextView mNumber;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             mNumber = itemView.findViewById(R.id.info_text);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    NumFragment nf = new NumFragment();
+                    nf.SetArguments(((TextView) v.findViewById(R.id.info_text)).getText().toString());
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.fr_container, nf)
+                            .addToBackStack(NumFragment.class.getSimpleName()).commit();
+                }
+            });
         }
+
     }
 }
