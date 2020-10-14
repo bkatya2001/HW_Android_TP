@@ -1,6 +1,8 @@
 package bolshakova.ekaterina.hw_android_tp;
 
+import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,9 +10,12 @@ import android.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
@@ -35,15 +40,29 @@ public class RVFragment extends Fragment {
         int columns = 3;
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) columns = 4;
         recyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), columns));
-        MyAdapter adapter = new MyAdapter(numbers);
+        final MyAdapter adapter = new MyAdapter(numbers);
         recyclerView.setAdapter(adapter);
+
+        Button button = view.findViewById(R.id.add_btn);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DataSource.getInstance().addData(new DataSource.NumberModel(0, Color.RED));
+                adapter.updateData(DataSource.getInstance().getData());
+                adapter.notifyDataSetChanged();
+            }
+        });
         return view;
     }
 
     public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
-        private List<DataSource.NumberModel> mData;
+        public List<DataSource.NumberModel> mData;
 
         public MyAdapter(List<DataSource.NumberModel> data) {
+            mData = data;
+        }
+
+        public void updateData(List<DataSource.NumberModel> data) {
             mData = data;
         }
 
@@ -67,11 +86,22 @@ public class RVFragment extends Fragment {
         }
     }
 
-    public static class MyViewHolder extends RecyclerView.ViewHolder {
+    public class MyViewHolder extends RecyclerView.ViewHolder {
         public final TextView mNumber;
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             mNumber = itemView.findViewById(R.id.info_text);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    NumFragment nf = new NumFragment();
+                    nf.SetArguments(((TextView) v.findViewById(R.id.info_text)).getText().toString());
+                    getFragmentManager().beginTransaction()
+                            .replace(R.id.fr_container, nf)
+                            .addToBackStack(NumFragment.class.getSimpleName()).commit();
+                }
+            });
         }
+
     }
 }
