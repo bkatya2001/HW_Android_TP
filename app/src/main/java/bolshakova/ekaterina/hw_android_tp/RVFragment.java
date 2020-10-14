@@ -2,6 +2,7 @@ package bolshakova.ekaterina.hw_android_tp;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
@@ -38,15 +40,29 @@ public class RVFragment extends Fragment {
         int columns = 3;
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) columns = 4;
         recyclerView.setLayoutManager(new GridLayoutManager(view.getContext(), columns));
-        MyAdapter adapter = new MyAdapter(numbers);
+        final MyAdapter adapter = new MyAdapter(numbers);
         recyclerView.setAdapter(adapter);
+
+        Button button = view.findViewById(R.id.add_btn);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DataSource.getInstance().addData(new DataSource.NumberModel(0, Color.RED));
+                adapter.updateData(DataSource.getInstance().getData());
+                adapter.notifyDataSetChanged();
+            }
+        });
         return view;
     }
 
     public class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
-        private List<DataSource.NumberModel> mData;
+        public List<DataSource.NumberModel> mData;
 
         public MyAdapter(List<DataSource.NumberModel> data) {
+            mData = data;
+        }
+
+        public void updateData(List<DataSource.NumberModel> data) {
             mData = data;
         }
 

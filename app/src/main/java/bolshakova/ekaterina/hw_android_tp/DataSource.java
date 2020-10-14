@@ -16,6 +16,10 @@ class DataSource {
         return list;
     }
 
+    public void addData(NumberModel model){
+        list.add(model);
+    }
+
     private DataSource() {
         list = new ArrayList<>();
         for (int i = 1; i <= 100; i++) {
@@ -25,7 +29,7 @@ class DataSource {
         }
     }
 
-    public class NumberModel {
+    public static class NumberModel {
         private int mNumber;
         private int mColor;
 
