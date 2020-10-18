@@ -95,7 +95,7 @@ public class RVFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     NumFragment nf = new NumFragment();
-                    nf.SetArguments(((TextView) v.findViewById(R.id.info_text)).getText().toString());
+                    nf.SetArguments(((TextView) v.findViewById(R.id.info_text)).getText().toString(), ((TextView) v.findViewById(R.id.info_text)).getCurrentTextColor());
                     getFragmentManager().beginTransaction()
                             .replace(R.id.fr_container, nf)
                             .addToBackStack(NumFragment.class.getSimpleName()).commit();
